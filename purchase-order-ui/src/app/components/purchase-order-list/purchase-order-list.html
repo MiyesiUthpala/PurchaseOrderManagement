@@ -1,0 +1,44 @@
+<h2>Purchase Orders</h2>
+
+<div class="filters">
+  <input placeholder="Supplier" [(ngModel)]="supplierFilter" (input)="applyFilter()" />
+  <select [(ngModel)]="statusFilter" (change)="applyFilter()">
+    <option value="">All Status</option>
+    <option>Draft</option>
+    <option>Approved</option>
+    <option>Shipped</option>
+    <option>Completed</option>
+    <option>Cancelled</option>
+  </select>
+
+  <a routerLink="/create" class="btn">+ New PO</a>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>PO Number</th>
+      <th>Description</th>
+      <th>Supplier</th>
+      <th>Date</th>
+      <th>Total</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let po of filteredOrders">
+      <td>{{ po.poNumber }}</td>
+      <td>{{ po.poDescription }}</td>
+      <td>{{ po.supplierName }}</td>
+      <td>{{ po.orderDate | date:'yyyy-MM-dd'}}</td>
+      <td>{{ po.totalAmount | number:'1.2-2' }}</td>
+      <td>{{ po.status }}</td>
+      <td>
+        <a [routerLink]="['/edit', po.id]">Edit</a>
+        <button (click)="delete(po.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
