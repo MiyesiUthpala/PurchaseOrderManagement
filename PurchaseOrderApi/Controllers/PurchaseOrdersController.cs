@@ -18,22 +18,50 @@ namespace PurchaseOrderApi.Controllers
 
         // LIST + FILTER + SORT + PAGINATION
         [HttpGet]
-        public async Task<IActionResult> Get(string? supplier, string? status)
-        {
-            var query = _context.PurchaseOrders.AsQueryable();
+public async Task<IActionResult> Get(
+    string? supplier,
+    string? status,
+    string? sortBy = "OrderDate",
+    string? sortOrder = "desc",
+    int page = 1,
+    int pageSize = 10)
+{
+    var query = _context.PurchaseOrders.AsQueryable();
 
-            if (!string.IsNullOrEmpty(supplier))
-                query = query.Where(p => p.SupplierName.Contains(supplier));
+    if (!string.IsNullOrEmpty(supplier))
+        query = query.Where(p => p.SupplierName.Contains(supplier));
 
-            if (!string.IsNullOrEmpty(status))
-                query = query.Where(p => p.Status == status);
+    if (!string.IsNullOrEmpty(status))
+        query = query.Where(p => p.Status == status);
 
-            var result = await query
-                .OrderByDescending(p => p.OrderDate)
-                .ToListAsync();
+    // Sorting
+    var sortField = string.IsNullOrWhiteSpace(sortBy) ? "orderdate" : sortBy.ToLower();
+    var order = string.IsNullOrWhiteSpace(sortOrder) ? "desc" : sortOrder.ToLower();
 
-            return Ok(result);
-        }
+    query = sortField switch
+    {
+        "ponumber" => order == "asc" ? query.OrderBy(p => p.PoNumber) : query.OrderByDescending(p => p.PoNumber),
+        "totalamount" => order == "asc" ? query.OrderBy(p => p.TotalAmount) : query.OrderByDescending(p => p.TotalAmount),
+        "orderdate" => order == "asc" ? query.OrderBy(p => p.OrderDate) : query.OrderByDescending(p => p.OrderDate),
+        _ => query.OrderByDescending(p => p.OrderDate)
+    };
+
+    var totalCount = await query.CountAsync();
+
+    // Fetch all, then paginate in-memory
+    var allItems = await query.ToListAsync();
+    var result = allItems.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+    return Ok(new
+    {
+        Data = result,
+        TotalCount = totalCount,
+        Page = page,
+        PageSize = pageSize,
+        TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+    });
+}
+
 
      [HttpGet("{id}")]
             public async Task<IActionResult> GetById(int id)

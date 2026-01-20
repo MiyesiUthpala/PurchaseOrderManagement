@@ -1,0 +1,33 @@
+# Setup Instructions - Purchase Order Management Application
+
+Follow these steps to set up and run the project locally.
+
+---
+
+## Prerequisites
+
+### Backend (.NET Core)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)  
+- SQL Server  
+
+### Frontend (Angular)
+- [Node.js](https://nodejs.org/) (v18+ recommended)  
+- npm (v11+)  
+- Angular CLI
+
+
+Steps
+
+1. Clone the application using bellow git url
+https://github.com/MiyesiUthpala/PurchaseOrderManagement
+
+2.Open CMD from PurchaseOrderAPI folder and run 'dotnet run' command
+
+3. Open CMD from purchase-order-ui folder and run 'npm install' then run 'npm start'
+
+4 navigate to http://localhost:4200/
+
+
+
+
+

@@ -1,44 +1,72 @@
-<h2>Purchase Orders</h2>
+<div class="container">
+  <h2>Purchase Orders</h2>
 
-<div class="filters">
-  <input placeholder="Supplier" [(ngModel)]="supplierFilter" (input)="applyFilter()" />
-  <select [(ngModel)]="statusFilter" (change)="applyFilter()">
-    <option value="">All Status</option>
-    <option>Draft</option>
-    <option>Approved</option>
-    <option>Shipped</option>
-    <option>Completed</option>
-    <option>Cancelled</option>
-  </select>
+  <!-- Filters and Sorting -->
+  <div class="filters">
+    <input type="text" placeholder="Filter by supplier" [(ngModel)]="supplierFilter" (input)="applyFilter()" />
 
-  <a routerLink="/create" class="btn">+ New PO</a>
+    <select [(ngModel)]="statusFilter" (change)="applyFilter()">
+      <option value="">All Status</option>
+      <option>Draft</option>
+      <option>Approved</option>
+      <option>Shipped</option>
+      <option>Completed</option>
+      <option>Cancelled</option>
+    </select>
+<select
+  [(ngModel)]="sortBy"
+  (ngModelChange)="changeSort($event)">
+  <option value="">-- Select Sort --</option>
+  <option value="OrderDate">Sort by Date</option>
+  <option value="PoNumber">Sort by PO Number</option>
+  <option value="TotalAmount">Sort by Total Amount</option>
+</select>
+    <!-- <select [(ngModel)]="sortOrder" (change)="changeSort(sortBy)">
+      <option value="desc">Descending</option>
+      <option value="asc">Ascending</option>
+    </select> -->
+
+    <a routerLink="/create" class="btn">+ New PO</a>
+  </div>
+
+  <!-- Table -->
+  <table>
+    <thead>
+      <tr>
+        <th>PO Number</th>
+        <th>Description</th>
+        <th>Supplier</th>
+        <th>Date</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th style="width: 140px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let po of orders">
+        <td data-label="PO Number">{{ po.poNumber }}</td>
+        <td data-label="Description">{{ po.poDescription }}</td>
+        <td data-label="Supplier">{{ po.supplierName }}</td>
+        <td data-label="Date">{{ po.orderDate | date:'yyyy-MM-dd' }}</td>
+        <td data-label="Total">{{ po.totalAmount | number:'1.2-2' }}</td>
+        <td data-label="Status">
+          <span class="status" [ngClass]="po.status.toLowerCase()">{{ po.status }}</span>
+        </td>
+        <td data-label="Actions" class="actions">
+          <a [routerLink]="['/edit', po.id]">Edit</a>
+          <button class="delete" (click)="delete(po.id)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="orders.length === 0">
+        <td colspan="7">No records found.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage <= 1">Prev</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage >= totalPages">Next</button>
+  </div>
 </div>
-
-<table>
-  <thead>
-    <tr>
-      <th>PO Number</th>
-      <th>Description</th>
-      <th>Supplier</th>
-      <th>Date</th>
-      <th>Total</th>
-      <th>Status</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let po of filteredOrders">
-      <td>{{ po.poNumber }}</td>
-      <td>{{ po.poDescription }}</td>
-      <td>{{ po.supplierName }}</td>
-      <td>{{ po.orderDate | date:'yyyy-MM-dd'}}</td>
-      <td>{{ po.totalAmount | number:'1.2-2' }}</td>
-      <td>{{ po.status }}</td>
-      <td>
-        <a [routerLink]="['/edit', po.id]">Edit</a>
-        <button (click)="delete(po.id)">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</table>

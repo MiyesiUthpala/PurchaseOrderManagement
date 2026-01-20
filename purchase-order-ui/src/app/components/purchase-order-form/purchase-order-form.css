@@ -1,13 +1,141 @@
-form {
-  max-width: 400px;
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.form-header h2 {
+  flex: 1;
+  text-align: center;
+  margin: 0;
+}
+
+/* Home button */
+.home-btn {
+  text-decoration: none;
+  color: #92beeb;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.home-btn:hover {
+  background: #224361;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+/* Form layout */
+.form-group {
+  margin-bottom: 14px;
 }
 
 label {
   display: block;
-  margin-top: 10px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
 }
 
-input, select {
-  width: 100%;
-  padding: 6px;
+input,
+select {
+  width: 95%;
+  padding: 9px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+input::placeholder {
+  color: #9ca3af;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+}
+
+/* Placeholder gray */
+select.placeholder {
+  color: gray;
+}
+
+/* Selected value and dropdown options black */
+select:not(.placeholder) {
+  color: black;
+}
+
+
+
+/* Actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 22px;
+}
+
+button {
+  background: #1976d2;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+button:hover {
+  background: #155a9c;
+}
+
+button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  text-decoration: none;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.cancel-btn:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .form-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  button {
+    width: 100%;
+  }
 }

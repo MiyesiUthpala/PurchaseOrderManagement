@@ -1,8 +1,9 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PurchaseOrderService, PurchaseOrder } from '../../services/purchase-order.service';
+import { RouterModule } from '@angular/router';
+import { PurchaseOrderService, PurchaseOrder, ApiResponse } from '../../services/purchase-order.service';
 
 @Component({
   standalone: true,
@@ -11,37 +12,59 @@ import { PurchaseOrderService, PurchaseOrder } from '../../services/purchase-ord
   templateUrl: './purchase-order-list.html',
   styleUrls: ['./purchase-order-list.css']
 })
-export class PurchaseOrderListComponent {
-  orders: PurchaseOrder[] = [];
-  filteredOrders: PurchaseOrder[] = [];
-
+export class PurchaseOrderListComponent implements OnInit {
+  orders: PurchaseOrder[] = [];  // <-- plain array for table
   supplierFilter = '';
   statusFilter = '';
+  sortBy = 'OrderDate';
+  sortOrder = 'desc';
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 1;
+  totalCount = 0;
 
-  constructor(private service: PurchaseOrderService, private cdr: ChangeDetectorRef) {}
+  constructor(private service: PurchaseOrderService ,private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loadOrders();
   }
 
   loadOrders() {
-    this.service.getAll().subscribe(data => {
-      console.log('Fetched data:', data);
-      this.orders = data;
-      this.applyFilter(); // Make sure filteredOrders is populated on first load
-      this.cdr.detectChanges();
-    }, error => {
-      console.error('Error fetching orders', error);
-      this.filteredOrders = []; // fallback
+    this.service.getAll({
+      supplier: this.supplierFilter || undefined,
+      status: this.statusFilter || undefined,
+      sortBy: this.sortBy,
+      sortOrder: this.sortOrder,
+      page: this.currentPage,
+      pageSize: this.pageSize
+    }).subscribe((res: ApiResponse) => {
+      console.log('Fetched data:', res);
+      this.orders = res.data || [];           // Updated to match camelCase
+      this.totalPages = res.totalPages || 1;  // Updated to match camelCase
+      this.totalCount = res.totalCount || 0;  // Updated to match camelCase
+  
+    // Optional (safe, but not required)
+    this.cdr.detectChanges();
     });
   }
 
+
   applyFilter() {
-    // Show all orders if filters are empty
-    this.filteredOrders = this.orders.filter(o =>
-      (!this.supplierFilter || (o.supplierName && o.supplierName.toLowerCase().includes(this.supplierFilter.toLowerCase()))) &&
-      (!this.statusFilter || o.status === this.statusFilter)
-    );
+    this.currentPage = 1;
+    this.loadOrders();
+  }
+    changeSort(sortField: string) {
+      this.sortBy = sortField;
+      this.sortOrder = 'asc';   // or 'desc' if you prefer
+      this.currentPage = 1;
+      this.loadOrders();
+    }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadOrders();
+    }
   }
 
   delete(id?: number) {

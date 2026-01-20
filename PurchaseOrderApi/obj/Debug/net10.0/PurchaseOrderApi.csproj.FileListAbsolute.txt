@@ -137,3 +137,4 @@ C:\Users\miyes\PurchaseOrderApp\PurchaseOrderApi\obj\Debug\net10.0\refint\Purcha
 C:\Users\miyes\PurchaseOrderApp\PurchaseOrderApi\obj\Debug\net10.0\PurchaseOrderApi.pdb
 C:\Users\miyes\PurchaseOrderApp\PurchaseOrderApi\obj\Debug\net10.0\PurchaseOrderApi.genruntimeconfig.cache
 C:\Users\miyes\PurchaseOrderApp\PurchaseOrderApi\obj\Debug\net10.0\ref\PurchaseOrderApi.dll
+C:\Users\miyes\PurchaseOrderApp\PurchaseOrderApi\obj\Debug\net10.0\PurchaseOrderApi.sourcelink.json

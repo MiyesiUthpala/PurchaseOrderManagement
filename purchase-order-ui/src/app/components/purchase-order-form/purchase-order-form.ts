@@ -17,8 +17,8 @@ export class PurchaseOrderFormComponent {
     poDescription: '',
     supplierName: '',
     orderDate: '',
-    totalAmount: 0,
-    status: 'Draft'
+    totalAmount: null as any,
+    status: ''
   };
 
   isEdit = false;
@@ -45,6 +45,9 @@ export class PurchaseOrderFormComponent {
     });
     }
   }
+  goHome() {
+  this.router.navigate(['/']);
+}
 
   save() {
       if (this.isEdit && this.po.id) {
